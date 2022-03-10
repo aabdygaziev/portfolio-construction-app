@@ -1,5 +1,5 @@
 //custom hook
-import React, {useRef, useEffect } from 'react';
+import {useRef, useEffect } from 'react';
 export const useDidUpdate = (func, deps) => {
   const didMount = useRef(false);
 
@@ -15,8 +15,8 @@ export async function getStockData(tickers) {
   const options = {
     "method": "GET",
     "headers": {
-      "x-rapidapi-host": "twelve-data1.p.rapidapi.com",
-      "x-rapidapi-key": "f16bd58762msh183d1f7054913f0p1b1f03jsn5291dfc43dcc",
+      "x-rapidapi-host": 'twelve-data1.p.rapidapi.com',
+      "x-rapidapi-key": process.env.REACT_APP_RAPID_API_KEY,
     },
   };
 

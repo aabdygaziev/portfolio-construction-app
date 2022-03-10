@@ -1,6 +1,4 @@
 function Table({ stats }){
-  
-  
   return (
     <table>
       <thead>

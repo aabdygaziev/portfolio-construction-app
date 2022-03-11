@@ -1,8 +1,8 @@
 // import * as d3 from "https://cdn.skypack.dev/d3@7";
 import { getStockData, calcStats, useDidUpdate } from "./utils.js";
 import React, { useState, useEffect, useRef } from 'react';
-import StockForm from './components/StockForm';
-import Table from './components/Table';
+import StockForm from './components/StockForm/StockForm';
+import Table from './components/Table/Table';
 import './App.css';
 
 function App() {
@@ -11,12 +11,20 @@ function App() {
   const [stats, setStats] = useState([]);
   const [stockPrices, setStockPrices] = useState([]);
 
-  const handleClick = async(e) => {
-    e.preventDefault();
+  
+  useEffect(async () => {
     let data = await getStockData(tickers);
     setStockPrices(data);
     setLoaded(true);
-  };
+  },[tickers]);
+
+
+  // const handleClick = async(e) => {
+  //   e.preventDefault();
+  //   let data = await getStockData(tickers);
+  //   setStockPrices(data);
+  //   setLoaded(true);
+  // };
 
   useDidUpdate(() => {
     let newStats = calcStats(stockPrices, tickers);
@@ -37,10 +45,10 @@ function App() {
         <h1>Optimal Portfolio Constructor</h1>
       </header>
       <StockForm addStock={addStock}/>
-      <br/><br/>
+      <br/><hr/><br/>
       <p>Enter your stock tickers separated by a comma</p> 
       <p>Example: AAPL, MSFT, TSLA.</p>
-      <button onClick={handleClick}>Get Data</button>
+      {/*<button onClick={}>Get Data</button>*/}
       <br/><br/>
     </div>
   );

@@ -11,33 +11,37 @@ export const useDidUpdate = (func, deps) => {
 
 // fetch data
 export async function getStockData(tickers) {
-  tickers = tickers[0].split(',').map(ticker => ticker.trim());
-  const options = {
-    "method": "GET",
-    "headers": {
-      "x-rapidapi-host": 'twelve-data1.p.rapidapi.com',
-      "x-rapidapi-key": process.env.REACT_APP_RAPID_API_KEY,
-    },
-  };
+  if (tickers.length === 0) {
+    return "";
+  } else {
+    tickers = tickers[0].split(',').map(ticker => ticker.trim());
+    const options = {
+      "method": "GET",
+      "headers": {
+        "x-rapidapi-host": 'twelve-data1.p.rapidapi.com',
+        "x-rapidapi-key": process.env.REACT_APP_RAPID_API_KEY,
+      },
+    };
 
-  let urls = [];
-  tickers.forEach(ticker => {
-    let url = `https://twelve-data1.p.rapidapi.com/time_series?symbol=${ticker}&interval=1month&outputsize=60&format=json`;
-    urls.push(url);
-  });
+    let urls = [];
+    tickers.forEach(ticker => {
+      let url = `https://twelve-data1.p.rapidapi.com/time_series?symbol=${ticker}&interval=1month&outputsize=60&format=json`;
+      urls.push(url);
+    });
 
-  try {
-    let results = await Promise.all(urls.map(url => fetch(url, options).then(res => res.json())));
-    
-    let data = [];
-    for (let i = 0; i < tickers.length; i++) {
-      let stock = {};
-      stock[`${results[i].meta.symbol}`] = results[i].values;
-      data.push(stock);
+    try {
+      let results = await Promise.all(urls.map(url => fetch(url, options).then(res => res.json())));
+      
+      let data = [];
+      for (let i = 0; i < tickers.length; i++) {
+        let stock = {};
+        stock[`${results[i].meta.symbol}`] = results[i].values;
+        data.push(stock);
+      }
+      return data;
+    } catch (err) {
+      console.log(err);
     }
-    return data;
-  } catch (err) {
-    console.log(err);
   }
 }
 
@@ -54,47 +58,50 @@ export const debounce = (func, delay) => {
 
 // calculate returns
 export function calcStats(stocks, tickers) {
-  tickers = tickers[0].split(',').map(ticker => ticker.trim());
-  
-  let result = [];
-  
-  for (let i = 0; i < stocks.length; i++) {
-    let returns = [];
-    let stock = stocks[i][tickers[i]];
-    let len = stock.length;
-    for (let j = 1; j < len; j++) {
-      let currPrice = Number(stock[j - 1].close);
-      let prevPrice = Number(stock[j].close);
-      let delta = (currPrice - prevPrice) / prevPrice;
-      returns.push(delta);
-    }
-  
-    let mean = (returns.reduce((sum, price) => sum + price, 0) / returns.length);
-    let variance = calcVar(returns, mean);
-    let yMean = calcYearlyReturn(mean);
-    let yVariance = calcYearlyVariance(variance);
+  if (tickers.length !== 0) {
+    tickers = tickers[0].split(',').map(ticker => ticker.trim());
     
-    let obj = {
-      ticker: tickers[i],
-      meanReturn: mean,
-      variance: variance.toFixed(2),
-      yMean: yMean,
-      yVariance: yVariance.toFixed(2),
-    }
+    let result = [];
+    
+    for (let i = 0; i < stocks.length; i++) {
+      let returns = [];
+      let stock = stocks[i][tickers[i]];
+      let len = stock.length;
+      for (let j = 1; j < len; j++) {
+        let currPrice = Number(stock[j - 1].close);
+        let prevPrice = Number(stock[j].close);
+        let delta = (currPrice - prevPrice) / prevPrice;
+        returns.push(delta);
+      }
+    
+      let mean = (returns.reduce((sum, price) => sum + price, 0) / returns.length);
+      let variance = calcVar(returns, mean);
+      let yMean = calcYearlyReturn(mean);
+      let yVariance = calcYearlyVariance(variance);
+      
+      let obj = {
+        ticker: tickers[i],
+        meanReturn: mean,
+        variance: variance.toFixed(2),
+        yMean: yMean,
+        yVariance: yVariance.toFixed(2),
+      }
 
-    result.push(obj);
+      result.push(obj);
+    }
+    
+    return result;
   }
-  
-  return result;
+  return "";
 }
 
 function calcYearlyVariance(mean, n=12) {
-  // 52 weeks in a year
+  // n=12 --> 12 months in a year
   return mean * n;
 }
 
 function calcYearlyReturn(mean, n=12) {
-  // 52 weeks in a year
+  // n=12 --> 12 months in a year
   return mean * n;
 }
 

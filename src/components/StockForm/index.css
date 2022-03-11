@@ -1,0 +1,35 @@
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+
+.form-wrapper {
+  min-height: 250px;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.stock-input[type=text] {
+  display: block;
+  padding: 10px;
+  margin: 10px 0 30px 0;
+  min-width: 300px;
+  border-radius: 18px;
+  letter-spacing: 0.1em;
+  text-align: center;
+}
+
+#submit {
+  min-height: 40px;
+  padding: 0px;
+  display: block;
+  margin: auto;
+  color: #001f3f;
+  background-color: #3D9970;
+  min-width: 170px;
+  border-radius: 18px;
+  letter-spacing: 2px;
+}
+

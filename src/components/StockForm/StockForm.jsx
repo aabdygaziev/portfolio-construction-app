@@ -19,7 +19,8 @@ function StockForm({ addStock }) {
         name='stock' 
         id='stock' 
         className='stock-input' 
-        value={value} onChange={(e) => setValue(e.target.value.toUpperCase())} 
+        value={value} 
+        onChange={(e) => setValue(e.target.value.toUpperCase())} 
         placeholder="Enter your stocks"
         />
         <button id='submit'><strong>ENTER</strong></button>

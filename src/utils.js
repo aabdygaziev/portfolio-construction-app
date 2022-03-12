@@ -1,4 +1,4 @@
-//custom hook
+//custom hook, works only when the dependency arr changes, and doesn't render on initial mount
 import {useRef, useEffect } from 'react';
 export const useDidUpdate = (func, deps) => {
   const didMount = useRef(false);

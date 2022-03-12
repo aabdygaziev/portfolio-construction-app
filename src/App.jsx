@@ -1,4 +1,3 @@
-// import * as d3 from "https://cdn.skypack.dev/d3@7";
 import { getStockData, calcStats, useDidUpdate } from "./utils.js";
 import React, { useState, useEffect, useRef } from 'react';
 import StockForm from './components/StockForm/StockForm';
@@ -18,14 +17,6 @@ function App() {
     setLoaded(true);
   },[tickers]);
 
-
-  // const handleClick = async(e) => {
-  //   e.preventDefault();
-  //   let data = await getStockData(tickers);
-  //   setStockPrices(data);
-  //   setLoaded(true);
-  // };
-
   useDidUpdate(() => {
     let newStats = calcStats(stockPrices, tickers);
     setStats(newStats);
@@ -37,7 +28,6 @@ function App() {
     const newTickers= [...tickers, stock];
     setTickers(newTickers);
   }
-
 
   return (
     <div className='App'>
